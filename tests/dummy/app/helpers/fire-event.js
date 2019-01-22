@@ -1,7 +1,6 @@
-import { helper } from 'ember-helper';
-import Ember from 'ember';
+import { scheduleOnce } from '@ember/runloop';
+import { helper } from '@ember/component/helper';
 
-const { run: { scheduleOnce } } = Ember;
 
 export function eventHelper([target, eventName]) {
   // slice params to avoid mutating the provided params

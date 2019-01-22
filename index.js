@@ -43,13 +43,13 @@ RxHack.prototype.processString = function(content, relativePath) {
 
 module.exports = {
   name: 'rxjs',
-  
+
   treeForAddon: function(tree) {
     var rxPath = path.dirname(require.resolve('rxjs-es'));
     var rxTree = stew.find(rxPath, {
       include: ['**/*.js']
     });
-    
+
     var rxHackTree = new RxHack(rxTree);
     var trees = tree ? mergeTrees([tree, rxHackTree]) : rxHackTree;
     return this._super.treeForAddon.call(this, trees);

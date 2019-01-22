@@ -1,7 +1,6 @@
-import Ember from 'ember';
+import Component from '@ember/component';
+import Evented from '@ember/object/evented';
 import Rx from 'rxjs/Rx';
-
-const { Component, Evented } = Ember;
 
 export default Component.extend(Evented, {
   val: 1,

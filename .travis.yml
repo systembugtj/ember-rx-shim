@@ -1,33 +1,60 @@
+---
 language: node_js
 node_js:
-- '4'
+  # we recommend testing addons with the same minimum supported node version as Ember CLI
+  # so that your addon works for all apps
+  - "6"
+
 sudo: false
+dist: trusty
+
+addons:
+  chrome: stable
+
 cache:
   directories:
-  - node_modules
+    - $HOME/.npm
+
 env:
-- EMBER_TRY_SCENARIO=ember-1.13
-- EMBER_TRY_SCENARIO=ember-lts-2.4
-- EMBER_TRY_SCENARIO=ember-release
-- EMBER_TRY_SCENARIO=ember-beta
-- EMBER_TRY_SCENARIO=ember-canary
-matrix:
-  fast_finish: true
+  global:
+    # See https://git.io/vdao3 for details.
+    - JOBS=1
+
+branches:
+  only:
+    - master
+    # npm version tags
+    - /^v\d+\.\d+\.\d+/
+
+jobs:
+  fail_fast: true
   allow_failures:
-  - env: EMBER_TRY_SCENARIO=ember-canary
+    - env: EMBER_TRY_SCENARIO=ember-canary
+
+  include:
+    # runs linting and tests with current locked deps
+
+    - stage: "Tests"
+      name: "Tests"
+      script:
+        - npm run lint:hbs
+        - npm run lint:js
+        - npm test
+
+    # we recommend new addons test the current and previous LTS
+    # as well as latest stable release (bonus points to beta/canary)
+    - stage: "Additional Tests"
+      env: EMBER_TRY_SCENARIO=ember-lts-2.18
+    - env: EMBER_TRY_SCENARIO=ember-lts-3.4
+    - env: EMBER_TRY_SCENARIO=ember-release
+    - env: EMBER_TRY_SCENARIO=ember-beta
+    - env: EMBER_TRY_SCENARIO=ember-canary
+    - env: EMBER_TRY_SCENARIO=ember-default-with-jquery
+
 before_install:
-- npm config set spin false
-- npm install -g bower
-- npm install phantomjs-prebuilt
-install:
-- npm install
-- bower install
+  - npm config set spin false
+  - npm install -g npm@4
+  - npm --version
+
 script:
-- ember try $EMBER_TRY_SCENARIO test --skip-cleanup
-deploy:
-  provider: heroku
-  api_key:
-    secure: BdH6VcFmNbEtLoRwjI2TPnzo9kYhld7s/QrvQgW4bI9fnOETDHdlMBfoRf4DBr0RcGyGnrKiZIAw2t2Eiln7zLjsmFONYkJ+T03DPUmMrm5KVWCqA2NybZqrK7hJWtBcKDduRIkzIFERZN7oYpcrUcyoYaFwNHTtJVrxHMyqJ8xb1VVkEqKMXvr3z/5+FdojC734l593Sb/FmSJnZzXM4Aw2TsB8nzEo6xn/8B/41dZeL/mWT0R3VmCaG0tb06rBlN2I+GpOlj9SpBmRXkyZaRuSGNGU3zSmMnRxYkTjoDIj9pGsILMM4BeAG2SYXmXxOW9cpwWPefl3olrff9HBxNxS1/FmCMBE8cjRzgpF33GwDdK+CyO1HQ51VTJ6V/cYYuQMIOtvGGr49g0cGhBghF3vpHu6BIiVaRd7/F/Hh5Zl/IEjUD9RNqfzMYMiYJQiUZcHVW2nVnRasX72+xz1kpuJbStOb3Jbw3R+6NOq3/eQmY1MkPCQrK9Yp6tvgcl3yVcDLLbgMOuHmniyfCXW5aObcyB33cEu9w3r/tV35XhUTh/UbM0Vl4fHc0pALrxVxHvc4yB+wyBkKNCOUauKAiJLblTqb/TFPt6Hl2F4cFoiQElhNc3+wGuQjFKfgEmZ6uetB0zV+XFU44KEnsgVP46lZJgMUSn7T/1khCTMFS8=
-  app: ember-rx-shim-demo
-  on:
-    repo: mike-north/ember-rx-shim
+  - node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO

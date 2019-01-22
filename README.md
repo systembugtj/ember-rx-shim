@@ -1,10 +1,12 @@
-# ember-rx-shim [![Build Status](https://travis-ci.org/mike-north/ember-rx-shim.svg?branch=master)](https://travis-ci.org/mike-north/ember-rx-shim)
+# [DEPRECATED] ember-rx-shim [![Build Status](https://travis-ci.org/mike-north/ember-rx-shim.svg?branch=master)](https://travis-ci.org/mike-north/ember-rx-shim)
 
 A simple addon for adding [RxJS 5](https://github.com/ReactiveX/rxjs#rxjs-5-beta) to your Ember.js app. 
 
 ### Purpose
 
 This only makes the library available for consumption as ES6 modules, and will, in the future, be responsible for the most basic level of integration. Anything further should be accomplished via other addons that bring this one in as a dependency.
+
+With rxjs v6, this is deprecated, but still work with rxjs-es module.
 
 ## Installation
 
